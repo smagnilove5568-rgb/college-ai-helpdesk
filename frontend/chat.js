@@ -37,7 +37,7 @@ async function sendMessage() {
     const loading = addMessage("Typing...", "bot-message");
 
     try {
-        const response = await fetch("http://127.0.0.1:8000/chat", {
+        const response = await fetch("https://college-ai-helpdesk-3.onrender.com/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
