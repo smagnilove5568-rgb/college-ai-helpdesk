@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from rag.qa import answer_question
+from memory import get_history, save_history
+import uuid
 
 app = FastAPI()
 
@@ -16,6 +18,7 @@ app.add_middleware(
 
 class ChatRequest(BaseModel):
     question: str
+    session_id: str | None = None
 
 
 @app.get("/health")
@@ -25,5 +28,32 @@ def health():
 
 @app.post("/chat")
 def chat(request: ChatRequest):
-    result = answer_question(request.question)
-    return {"answer": result}
+
+    # create session if new user
+    session_id = request.session_id or str(uuid.uuid4())
+
+    # load previous conversation
+    history = get_history(session_id)
+
+    # add user message
+    history.append({
+        "role": "user",
+        "content": request.question
+    })
+
+    # generate AI response
+    result = answer_question(request.question, history)
+
+    # store AI response
+    history.append({
+        "role": "assistant",
+        "content": result
+    })
+
+    # save memory
+    save_history(session_id, history)
+
+    return {
+        "answer": result,
+        "session_id": session_id
+    }

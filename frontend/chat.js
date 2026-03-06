@@ -4,6 +4,9 @@ const chatInput = document.getElementById("chat-input");
 const chatSend = document.getElementById("chat-send");
 const chatMessages = document.getElementById("chat-messages");
 
+// session memory
+let sessionId = localStorage.getItem("session_id");
+
 chatToggle.addEventListener("click", function () {
     chatPopup.classList.toggle("active");
 });
@@ -42,11 +45,22 @@ async function sendMessage() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ question: question })
+            body: JSON.stringify({
+                question: question,
+                session_id: sessionId
+            })
         });
 
         const data = await response.json();
+
+        // save session if first time
+        if (!sessionId && data.session_id) {
+            sessionId = data.session_id;
+            localStorage.setItem("session_id", sessionId);
+        }
+
         loading.textContent = data.answer;
+
     } catch (error) {
         loading.textContent = "Something went wrong. Please try again.";
     }
