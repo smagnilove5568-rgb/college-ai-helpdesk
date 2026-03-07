@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from rag.qa import answer_question
 from memory import get_history, save_history
+from summarizer import summarize_history
 import uuid
 
 app = FastAPI()
@@ -19,6 +20,9 @@ app.add_middleware(
 class ChatRequest(BaseModel):
     question: str
     session_id: str | None = None
+
+
+MAX_HISTORY = 10
 
 
 @app.get("/health")
@@ -40,6 +44,18 @@ def chat(request: ChatRequest):
         "role": "user",
         "content": request.question
     })
+
+    # summarize old messages if history too long
+    if len(history) > MAX_HISTORY:
+
+        summary = summarize_history(history[:-4])
+
+        history = [
+            {
+                "role": "system",
+                "content": f"Conversation summary: {summary}"
+            }
+        ] + history[-4:]
 
     # generate AI response
     result = answer_question(request.question, history)
