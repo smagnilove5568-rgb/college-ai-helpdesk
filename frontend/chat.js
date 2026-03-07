@@ -4,13 +4,13 @@ const chatInput = document.getElementById("chat-input");
 const chatSend = document.getElementById("chat-send");
 const chatMessages = document.getElementById("chat-messages");
 
-// --- Added Step 2: New Chat Button Reference ---
+// --- Step 2: New Chat Button Reference ---
 const newChatBtn = document.getElementById("new-chat-btn");
 
 // session memory
 let sessionId = localStorage.getItem("session_id");
 
-// --- Added Step 2: New Chat Event Listener ---
+// --- Step 2: Updated New Chat Event Listener ---
 newChatBtn.addEventListener("click", function () {
     // remove session id from storage
     localStorage.removeItem("session_id");
@@ -18,8 +18,8 @@ newChatBtn.addEventListener("click", function () {
     // reset local variable
     sessionId = null;
     
-    // clear chat messages from UI
-    chatMessages.innerHTML = "";
+    // clear chat messages and add welcome message
+    chatMessages.innerHTML = "<div class='message bot-message'>Hello! How can I help you today?</div>";
 });
 
 chatToggle.addEventListener("click", function () {
