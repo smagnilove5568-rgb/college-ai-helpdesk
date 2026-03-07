@@ -5,115 +5,134 @@
 
 <style>
 .typing {
-display: flex;
-gap: 5px;
-align-items: center;
+    display: flex;
+    gap: 5px;
+    align-items: center;
 }
 
 .typing span {
-width: 6px;
-height: 6px;
-background: #888;
-border-radius: 50%;
-animation: blink 1.4s infinite;
+    width: 6px;
+    height: 6px;
+    background: #888;
+    border-radius: 50%;
+    animation: blink 1.4s infinite;
 }
 
 .typing span:nth-child(2){
-animation-delay: 0.2s;
+    animation-delay: 0.2s;
 }
 
 .typing span:nth-child(3){
-animation-delay: 0.4s;
+    animation-delay: 0.4s;
 }
 
 @keyframes blink {
-0% {opacity: 0.2;}
-20% {opacity: 1;}
-100% {opacity: 0.2;}
+    0% {opacity: 0.2;}
+    20% {opacity: 1;}
+    100% {opacity: 0.2;}
 }
 
 body{
-font-family: Arial, sans-serif;
-background:#f4f6fb;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f6fb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
 }
 
 .chat-container{
-width:420px;
-height:600px;
-background:white;
-border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
-display:flex;
-flex-direction:column;
-overflow:hidden;
+    width:420px;
+    height:600px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
 }
 
-.header{
-background:#4a6cf7;
-color:white;
-padding:15px;
-text-align:center;
-font-weight:bold;
+/* Updated Header Styles */
+.header {
+    background: #4a6cf7;
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.new-chat-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 0; /* Reset margin for header button */
+}
+
+.new-chat-btn:hover {
+    background: white;
+    color: #4a6cf7;
 }
 
 .chat-box{
-flex:1;
-padding:15px;
-overflow-y:auto;
-display:flex;
-flex-direction:column;
-gap:10px;
+    flex:1;
+    padding:15px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
 }
 
 .message{
-padding:10px 14px;
-border-radius:16px;
-max-width:75%;
-font-size:14px;
+    padding:10px 14px;
+    border-radius:16px;
+    max-width:75%;
+    font-size:14px;
 }
 
 .user{
-align-self:flex-end;
-background:#4a6cf7;
-color:white;
+    align-self:flex-end;
+    background:#4a6cf7;
+    color:white;
 }
 
 .bot{
-align-self:flex-start;
-background:#e5e7eb;
+    align-self:flex-start;
+    background:#e5e7eb;
 }
 
 .input-area{
-display:flex;
-padding:10px;
-border-top:1px solid #eee;
+    display:flex;
+    padding:10px;
+    border-top:1px solid #eee;
 }
 
 input{
-flex:1;
-padding:10px;
-border-radius:8px;
-border:1px solid #ddd;
-outline:none;
+    flex:1;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    outline:none;
 }
 
 button{
-margin-left:10px;
-padding:10px 16px;
-border:none;
-background:#4a6cf7;
-color:white;
-border-radius:8px;
-cursor:pointer;
+    margin-left:10px;
+    padding:10px 16px;
+    border:none;
+    background:#4a6cf7;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
 }
 
 button:hover{
-background:#3954d6;
+    background:#3954d6;
 }
 
 </style>
@@ -123,75 +142,78 @@ background:#3954d6;
 
 <div class="chat-container">
 
-<div class="header">
-College AI Helpdesk
-</div>
+    <div class="header">
+        <span>College AI Helpdesk</span>
+        <button id="new-chat-btn" class="new-chat-btn" onclick="resetChat()">New Chat</button>
+    </div>
 
-<div id="chatBox" class="chat-box"></div>
+    <div id="chatBox" class="chat-box"></div>
 
-<div class="input-area">
-<input id="userInput" placeholder="Ask a question...">
-<button onclick="sendMessage()">Send</button>
-</div>
+    <div class="input-area">
+        <input id="userInput" placeholder="Ask a question..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()">Send</button>
+    </div>
 
 </div>
 
 <script>
-
-async function sendMessage(){
-
-const input = document.getElementById("userInput");
-const chatBox = document.getElementById("chatBox");
-
-const question = input.value;
-
-if(!question) return;
-
-chatBox.innerHTML += `<div class="message user">${question}</div>`;
-
-input.value="";
-chatBox.scrollTop = chatBox.scrollHeight;
-
-
-/* typing bubble */
-const typingBubble = document.createElement("div");
-typingBubble.className = "message bot";
-typingBubble.innerHTML = `
-<div class="typing">
-<span></span>
-<span></span>
-<span></span>
-</div>
-`;
-
-chatBox.appendChild(typingBubble);
-chatBox.scrollTop = chatBox.scrollHeight;
-
-
-/* API call */
-
-const response = await fetch("https://college-ai-helpdesk-3.onrender.com/chat",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({question})
-});
-
-const data = await response.json();
-
-/* remove typing bubble */
-
-typingBubble.remove();
-
-/* show AI response */
-
-chatBox.innerHTML += `<div class="message bot">${data.answer}</div>`;
-
-chatBox.scrollTop = chatBox.scrollHeight;
-
+// Function to clear the chat
+function resetChat() {
+    document.getElementById("chatBox").innerHTML = "";
 }
 
+// Function to handle 'Enter' key press
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+}
+
+async function sendMessage(){
+    const input = document.getElementById("userInput");
+    const chatBox = document.getElementById("chatBox");
+
+    const question = input.value;
+    if(!question) return;
+
+    chatBox.innerHTML += `<div class="message user">${question}</div>`;
+    input.value="";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    /* typing bubble */
+    const typingBubble = document.createElement("div");
+    typingBubble.className = "message bot";
+    typingBubble.innerHTML = `
+        <div class="typing">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    `;
+
+    chatBox.appendChild(typingBubble);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    /* API call */
+    try {
+        const response = await fetch("https://college-ai-helpdesk-3.onrender.com/chat",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({question})
+        });
+
+        const data = await response.json();
+        typingBubble.remove();
+        chatBox.innerHTML += `<div class="message bot">${data.answer}</div>`;
+    } catch (error) {
+        typingBubble.remove();
+        chatBox.innerHTML += `<div class="message bot">Error: Could not connect to the server.</div>`;
+    }
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 </script>
 
 </body>

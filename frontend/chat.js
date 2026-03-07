@@ -4,8 +4,23 @@ const chatInput = document.getElementById("chat-input");
 const chatSend = document.getElementById("chat-send");
 const chatMessages = document.getElementById("chat-messages");
 
+// --- Added Step 2: New Chat Button Reference ---
+const newChatBtn = document.getElementById("new-chat-btn");
+
 // session memory
 let sessionId = localStorage.getItem("session_id");
+
+// --- Added Step 2: New Chat Event Listener ---
+newChatBtn.addEventListener("click", function () {
+    // remove session id from storage
+    localStorage.removeItem("session_id");
+    
+    // reset local variable
+    sessionId = null;
+    
+    // clear chat messages from UI
+    chatMessages.innerHTML = "";
+});
 
 chatToggle.addEventListener("click", function () {
     chatPopup.classList.toggle("active");
