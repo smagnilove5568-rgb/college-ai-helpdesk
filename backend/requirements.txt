@@ -7,4 +7,6 @@ openai
 pypdf
 faiss-cpu
 tiktoken
+langchain-openai
+rank-bm25
 
