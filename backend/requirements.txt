@@ -9,4 +9,5 @@ faiss-cpu
 tiktoken
 langchain-openai
 rank-bm25
-
+redis
+python-dotenv
