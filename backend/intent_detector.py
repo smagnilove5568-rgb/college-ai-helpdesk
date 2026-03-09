@@ -1,28 +1,31 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from langchain_openai import ChatOpenAI
 
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 def detect_intent(question: str):
 
     prompt = f"""
-You are classifying a student's intent for a university helpdesk.
+Classify the user's intent.
 
-Possible intents:
-- admission
-- fees
-- course_information
-- location
-- hostel
-- placement
-- greeting
-- general
-
-User question:
+User message:
 {question}
 
-Return ONLY the intent name.
+Possible intents:
+- greeting
+- admission
+- fee_query
+- program_info
+- university_info
+- facilities
+- placement
+- unknown
+
+Return only the intent name.
 """
 
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     response = llm.invoke(prompt)
 
     return response.content.strip().lower()
