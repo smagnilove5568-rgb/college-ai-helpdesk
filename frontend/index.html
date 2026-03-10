@@ -72,7 +72,7 @@ body{
     border-radius: 6px;
     font-size: 12px;
     cursor: pointer;
-    margin-left: 0; /* Reset margin for header button */
+    margin-left: 0;
 }
 
 .new-chat-btn:hover {
@@ -94,6 +94,7 @@ body{
     border-radius:16px;
     max-width:75%;
     font-size:14px;
+    line-height: 1.4;
 }
 
 .user{
@@ -157,10 +158,33 @@ button:hover{
 </div>
 
 <script>
-// Function to clear the chat
-function resetChat() {
-    document.getElementById("chatBox").innerHTML = "";
+// Function to show the welcome message
+function showWelcomeMessage() {
+    const chatBox = document.getElementById("chatBox");
+    chatBox.innerHTML = `
+        <div class="message bot">
+        Hello 👋<br><br>
+        I am the <b>SAGE University AI Helpdesk</b>.<br><br>
+
+        You can ask about:<br>
+        • Admissions<br>
+        • Programs<br>
+        • Placements<br>
+        • Campus facilities<br>
+        • University information
+        </div>
+    `;
 }
+
+// Function to clear the chat and reset welcome message
+function resetChat() {
+    showWelcomeMessage();
+}
+
+// Show welcome message on page load
+window.onload = function () {
+    showWelcomeMessage();
+};
 
 // Function to handle 'Enter' key press
 function handleKeyPress(event) {
